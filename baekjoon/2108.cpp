@@ -1,48 +1,40 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <stack>
 #include <cmath>
-#pragma warning (disable:4996);
+#include <algorithm>
 using namespace std;
-vector <int> arr;
-int ci[9000];
+
 int main(void) {
+    ios_base::sync_with_stdio(false); cin.tie(NULL);
+    int N, temp, mean, mode = 0, min, max = 0;
+    bool isSecond = false;
+    cin >> N;
+    vector<int> vec(N);
+    vector<int> vec2(8001, 0);
+    for (int i = 0; i < N; i++) {
+        cin >> vec[i];
+        mean += vec[i];
+        temp = (vec[i] <= 0) ? abs(vec[i]) : vec[i] + 4000;
+        vec2[temp]++;
+        if (vec2[temp] > max)
+            max = vec2[temp];
+    }
+    sort(vec.begin(), vec.end());
 
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout.tie(0);
+    for (int i = -4000; i < 4001; i++) {
+        temp = i <= 0 ? abs(i) : i + 4000;
+        if (vec2[temp] == max) {
+            mode = i;
+            if (isSecond)
+                break;
+            isSecond = true;
+        }
+    }
 
-	int n;
-	cin >> n;
-	double sum = 0;
-	for (int i = 0; i < n; i++) {
-		int k;
-		cin >> k;
-		ci[k + 4000]++;
-		arr.push_back(k);
-		sum += k;
-	}
-	int max = 0;
-	int m = 0;
-	for (int i = 0; i < 8999; i++) {
-		if (max < ci[i]) {
-			m = i;
-			max = ci[i];
-		}
-	}
-
-	for (int i = 0; i < 8999; i++) {
-		if (max == ci[i] && i != m) {
-			m = i;
-			break;
-		}
-	}
-	sort(arr.begin(), arr.end());
-	cout << floor((sum / (double)n)+0.5)<<'\n';
-	cout << arr[n / 2] << '\n';
-	cout << m-4000 << '\n';
-	cout << arr[arr.size() - 1] - arr[0] << '\n';
-
-	return 0;
+    cout << round(mean / (double)N) << '\n';
+    cout << vec[round(N / 2)] << '\n';
+    cout << mode << '\n';
+    min = vec[0];
+    max = vec[vec.size() - 1];
+    cout << max - min << '\n';
 }
